@@ -1,44 +1,37 @@
-# https://paris-saclay-cds.github.io/ramp-docs/ramp-workflow/advanced/data.html#prepare-data-script
-
 import os
 import pandas as pd
-import rampwf as rw
-from sklearn.model_selection import StratifiedShuffleSplit
+import numpy as np
+from sklearn.model_selection import StratifiedKFold
 
-problem_title = 'Titanic survival classification'
-_target_column_name = 'Survived'
-_ignore_column_names = ['PassengerId']
-_prediction_label_names = [0, 1]
-# A type (class) which will be used to create wrapper objects for y_pred
-Predictions = rw.prediction_types.make_multiclass(
-    label_names=_prediction_label_names)
-# An object implementing the workflow
-workflow = rw.workflows.Estimator()
+import rampwf as rw
+
+problem_title = 'Flight Chronicles - Predicting Flight ratings'
+
+labels =[1, 2, 3, 4, 5, 6, 7, 8, 9, 10] 
+Predictions = rw.prediction_types.make_multiclass(labels)
+
+workflow = rw.workflows.Classifier()
+
 
 score_types = [
-    rw.score_types.ROCAUC(name='auc'),
-    rw.score_types.Accuracy(name='acc'),
-    rw.score_types.NegativeLogLikelihood(name='nll'),
+    rw.score_types.BalancedAccuracy(
+        name="bal_acc", precision=3, adjusted=False
+    ),
+    rw.score_types.Accuracy(name="acc", precision=3),
 ]
 
+def get_data(path=".",split = "train"):
+    data_df = pd.read_csv(os.path.join(path, "data", split + ".csv"))
+    y = np.array(data_df["rating"].astype("int8"))
+    X = data_df.drop(columns=["rating"])
+    return X, y
+
+def get_test_data(path="."):
+    return get_data(path, "test")
+
+def get_train_data(path="."):
+    return get_data(path, "train")
 
 def get_cv(X, y):
-    cv = StratifiedShuffleSplit(n_splits=8, test_size=0.2, random_state=57)
+    cv = StratifiedKFold(n_splits=3,shuffle=True, random_state=42)
     return cv.split(X, y)
-
-
-def _read_data(path, f_name):
-    data = pd.read_csv(os.path.join(path, 'data', f_name))
-    y_array = data[_target_column_name].values
-    X_df = data.drop([_target_column_name] + _ignore_column_names, axis=1)
-    return X_df, y_array
-
-
-def get_train_data(path='.'):
-    f_name = 'train.csv'
-    return _read_data(path, f_name)
-
-
-def get_test_data(path='.'):
-    f_name = 'test.csv'
-    return _read_data(path, f_name)
