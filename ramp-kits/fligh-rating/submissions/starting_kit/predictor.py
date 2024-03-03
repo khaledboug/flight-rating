@@ -1,32 +1,24 @@
-from sklearn.compose import make_column_transformer
+from sklearn.base import BaseEstimator
 from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import StandardScaler
-from sklearn.preprocessing import OneHotEncoder
-from sklearn.impute import SimpleImputer
-from sklearn.pipeline import Pipeline
-from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import LabelEncoder
+from sklearn.compose import make_column_transformer
+from sklearn.ensemble import RandomForestClassifier
 
+class Classifier(BaseEstimator):
+    def __init__(self):
+        self.categorical_cols = ['header','author','date','place','content','aircraft','traveller_type','seat_type','route','date_flown','recommended','trip_verified']
+        self.categorical_transformer = make_pipeline(LabelEncoder())
+        self.preprocessor = make_column_transformer((self.categorical_transformer, self.categorical_cols))
+        self.model = RandomForestClassifier(n_estimators=100, random_state=1)
+        self.pipe = make_pipeline(self.preprocessor, self.model)
 
-def get_estimator():
+    def fit(self, X, y):
+        self.pipe.fit(X, y)
 
-    categorical_cols = ['Sex', 'Pclass', 'Embarked']
-    categorical_pipeline = make_pipeline(
-        SimpleImputer(strategy='constant', fill_value='missing'),
-        OneHotEncoder(handle_unknown='ignore'),
-    )
-    numerical_cols = ['Age', 'SibSp', 'Parch', 'Fare']
-    numerical_pipeline = make_pipeline(
-        StandardScaler(), SimpleImputer(strategy='constant', fill_value=-1)
-    )
+    def predict(self, X):
+        return self.pipe.predict(X)
 
-    preprocessor = make_column_transformer(
-        (categorical_pipeline, categorical_cols),
-        (numerical_pipeline, numerical_cols),
-    )
+    def predict_proba(self, X):
+        return self.pipe.predict_proba(X)
+    
 
-    pipeline = Pipeline([
-        ('transformer', preprocessor),
-        ('classifier', LogisticRegression()),
-    ])
-
-    return pipeline
