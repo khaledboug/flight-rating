@@ -1,12 +1,27 @@
-name: ramp-titanic
+name: ramp-flight
 channels:
+  - conda-forge
   - defaults
 dependencies:
-  - pip
   - numpy
-  - scikit-learn>=0.22
+  - scipy
   - pandas
+  - scikit-learn>=0.22
+  - missingno
   - matplotlib
   - seaborn
+  - ipywidgets
+  - joblib
+  - lightgbm
+  - xgboost
+  - catboost
+  - tensorflow-cpu
+  - pytorch-cpu
+  - torchvision-cpu
+  - imbalanced-learn
+
+  - pip
   - pip:
-    - ramp-workflow
+    - ramp-workflow==0.6.0
+    - osfclient
+    - optuna
