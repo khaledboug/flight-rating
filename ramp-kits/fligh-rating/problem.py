@@ -10,7 +10,7 @@ problem_title = 'Flight Chronicles - Predicting Flight ratings'
 labels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 Predictions = rw.prediction_types.make_multiclass(labels)
 
-workflow = rw.workflows.Classifier()
+workflow = rw.workflows.Estimator()
 
 
 score_types = [

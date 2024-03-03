@@ -1,7 +1,11 @@
 name: ramp-flight
+
+
 channels:
   - conda-forge
   - defaults
+  - pytorch
+
 dependencies:
   - numpy
   - scipy
@@ -15,13 +19,13 @@ dependencies:
   - lightgbm
   - xgboost
   - catboost
-  - tensorflow-cpu
   - pytorch-cpu
   - torchvision-cpu
   - imbalanced-learn
-
   - pip
+  
   - pip:
     - ramp-workflow==0.6.0
     - osfclient
     - optuna
+    - tensorflow-cpu
