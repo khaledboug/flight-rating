@@ -4,3 +4,5 @@ pandas
 matplotlib
 ramp-workflow
 seaborn
+wordcloud
+nltk
