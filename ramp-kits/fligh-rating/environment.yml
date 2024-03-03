@@ -29,3 +29,5 @@ dependencies:
     - osfclient
     - optuna
     - tensorflow-cpu
+    - nltk
+    - wordcloud

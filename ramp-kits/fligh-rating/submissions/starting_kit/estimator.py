@@ -5,6 +5,7 @@ from sklearn.ensemble import RandomForestClassifier
 
 
 def get_estimator():
+    # preprocessing
     categorical_cols = ['header',
                         'author',
                         'date',
@@ -22,7 +23,10 @@ def get_estimator():
     preprocessor = make_column_transformer((
                     categorical_transformer,
                     categorical_cols))
+
+    # model
     model = RandomForestClassifier(n_estimators=100, random_state=1)
+
     pipe = make_pipeline(preprocessor, model)
 
     return pipe
