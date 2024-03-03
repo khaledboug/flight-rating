@@ -17,3 +17,5 @@ torchvision # torchvision-cpu
 lightgbm
 xgboost
 catboost
+wordcloud
+nltk
